@@ -251,13 +251,6 @@ st.markdown("""
     ul[data-testid="stVirtualDropdown"] li, div[data-baseweb="popover"] li { color: var(--ink) !important; background-color: var(--surface) !important; }
     ul[data-testid="stVirtualDropdown"] li:hover { background-color: var(--surface-alt) !important; }
 
-    .stSlider [data-testid="stTickBarMin"], .stSlider [data-testid="stTickBarMax"],
-    .stSlider label, .stSlider div { color: var(--ink) !important; }
-    .stSlider [role="slider"] { background-color: var(--primary) !important; }
-    .stSlider [data-testid="stThumbValue"], .stSlider div[data-testid="stTickBar"] { color: var(--ink) !important; }
-    div[data-baseweb="slider"] div[role="slider"] div { color: #FFFFFF !important; }
-    div[data-baseweb="slider"] > div > div > div { background: var(--primary) !important; }
-
     .stRadio label, .stRadio div, .stRadio p, .stRadio span { color: var(--ink) !important; }
     .stRadio [role="radiogroup"] { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .stRadio [role="radiogroup"] label {
@@ -525,7 +518,7 @@ id_col1, id_col2 = st.columns(2)
 with id_col1:
     with st.container(border=True):
         st.markdown('<div class="field-label">Age (yrs)</div>', unsafe_allow_html=True)
-        age = st.slider("Age", 18, 100, 30, label_visibility="collapsed")
+        age = st.number_input("Age", min_value=18, max_value=100, value=30, step=1, label_visibility="collapsed")
 with id_col2:
     with st.container(border=True):
         st.markdown('<div class="field-label">Sex</div>', unsafe_allow_html=True)
@@ -538,7 +531,7 @@ h_col1, h_col2 = st.columns(2)
 with h_col1:
     with st.container(border=True):
         st.markdown('<div class="field-label">BMI</div>', unsafe_allow_html=True)
-        bmi = st.slider("BMI", 15.0, 55.0, 25.0, step=0.1, label_visibility="collapsed")
+        bmi = st.number_input("BMI", min_value=15.0, max_value=55.0, value=25.0, step=0.1, format="%.1f", label_visibility="collapsed")
         cat_label, cat_class = bmi_category(bmi)
         st.markdown(f'<span class="field-tag {cat_class}">{cat_label}</span>', unsafe_allow_html=True)
 with h_col2:
@@ -553,7 +546,7 @@ c_col1, c_col2 = st.columns(2)
 with c_col1:
     with st.container(border=True):
         st.markdown('<div class="field-label">Children</div>', unsafe_allow_html=True)
-        children = st.slider("Children", 0, 6, 0, label_visibility="collapsed")
+        children = st.number_input("Children", min_value=0, max_value=6, value=0, step=1, label_visibility="collapsed")
 with c_col2:
     with st.container(border=True):
         st.markdown('<div class="field-label">Region</div>', unsafe_allow_html=True)
