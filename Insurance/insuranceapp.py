@@ -21,7 +21,6 @@ st.set_page_config(
     page_title="CareMetric — Predictive Premium Intelligence",
     page_icon="🩺",
     layout="centered",
-    initial_sidebar_state="expanded",
 )
 
 # ---------------------------------------------------------------
@@ -225,9 +224,6 @@ st.markdown("""
     .stDownloadButton>button:hover { background-color: var(--primary); color: #FFFFFF !important; border-color: #0F5E45; }
     .stDownloadButton>button p { color: inherit !important; }
 
-    section[data-testid="stSidebar"] { background-color: var(--surface); border-right: 1px solid var(--line); }
-    section[data-testid="stSidebar"] * { color: var(--ink) !important; font-family: 'Inter', sans-serif; }
-    section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 { font-family: 'Sora', sans-serif !important; }
 
     /* =============================================================
        CONTRAST / WIDGET OVERRIDES (light theme)
@@ -381,11 +377,6 @@ st.markdown("""
     .footer-k { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--ink-dim) !important; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
     .footer-v { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--ink) !important; }
 
-    .sidebar-disclaimer {
-        margin-top: 1.1rem; padding-top: 0.6rem; border-top: 1px dashed var(--line);
-        font-size: 0.73rem; color: var(--ink-dim) !important; font-style: italic; line-height: 1.45;
-    }
-
     .footer-note {
         display: flex; justify-content: space-between;
         font-family: 'IBM Plex Mono', monospace;
@@ -478,30 +469,6 @@ ICON_COVERAGE = '''<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org
 </svg>'''
 
 # ---------------------------------------------------------------
-# SIDEBAR — MODEL NOTES
-# ---------------------------------------------------------------
-with st.sidebar:
-    st.markdown('<div class="page-heading eyebrow">Model Notes</div>', unsafe_allow_html=True)
-    st.markdown('''
-        <div class="intake-card" style="margin-top:0.7rem; margin-bottom:0.9rem;">
-            <div class="footer-k">Prediction Model</div>
-            <div class="footer-v" style="margin-bottom:0.4rem;">Ridge Regression</div>
-            <span class="field-tag tag-dim">Polynomial features, degree 2</span>
-        </div>
-    ''', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">What drives the estimate</div>', unsafe_allow_html=True)
-    st.markdown(
-        "BMI alone barely moves the number — but BMI **combined with "
-        "smoker status** raises it sharply. CareMetric runs an explicit "
-        "`bmi × smoker` interaction term to capture that compounding effect."
-    )
-    st.markdown(
-        '<div class="sidebar-disclaimer">Not medical or financial advice.'
-        '<br>Estimator for educational purposes only.</div>',
-        unsafe_allow_html=True
-    )
-
-# ---------------------------------------------------------------
 # BRAND HEADER + HEADING
 # ---------------------------------------------------------------
 now = datetime.datetime.now()
@@ -567,8 +534,8 @@ st.markdown(f'<div class="section-label">{ICON_COVERAGE} Coverage</div>', unsafe
 c_col1, c_col2 = st.columns(2)
 with c_col1:
     with st.container(border=True):
-        st.markdown('<div class="field-label">Dependents</div>', unsafe_allow_html=True)
-        children = st.slider("Dependents", 0, 6, 0, label_visibility="collapsed")
+        st.markdown('<div class="field-label">Children</div>', unsafe_allow_html=True)
+        children = st.slider("Children", 0, 6, 0, label_visibility="collapsed")
 with c_col2:
     with st.container(border=True):
         st.markdown('<div class="field-label">Region</div>', unsafe_allow_html=True)
