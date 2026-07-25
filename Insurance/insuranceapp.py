@@ -16,9 +16,9 @@ import hashlib
 import os
 
 # Files created by the training script (train_model.py) / dataset export.
-# Keep both of these in the same directory as this app.py when deploying.
-MODEL_PATH = "insurance_model_bundle.pkl"
-DATA_PATH = "insurance.csv"
+# These live inside the "Insurance" subfolder in this repo, not at the root.
+MODEL_PATH = "Insurance/insurance_model_bundle.pkl"
+DATA_PATH = "Insurance/insurance.csv"
 
 # ---------------------------------------------------------------
 # PAGE CONFIG (must be first Streamlit call)
