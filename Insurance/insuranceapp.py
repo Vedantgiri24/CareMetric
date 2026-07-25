@@ -15,6 +15,11 @@ import datetime
 import hashlib
 import os
 
+# Files created by the training script (train_model.py) / dataset export.
+# Keep both of these in the same directory as this app.py when deploying.
+MODEL_PATH = "insurance_model_bundle.pkl"
+DATA_PATH = "insurance.csv"
+
 # ---------------------------------------------------------------
 # PAGE CONFIG (must be first Streamlit call)
 # ---------------------------------------------------------------
@@ -394,12 +399,12 @@ st.markdown("""
 # ---------------------------------------------------------------
 @st.cache_resource
 def load_bundle():
-    return joblib.load("insurance_model_bundle.pkl")
+    return joblib.load(MODEL_PATH)
 
 @st.cache_data
 def load_reference_data():
     try:
-        return pd.read_csv("insurance.csv")
+        return pd.read_csv(DATA_PATH)
     except FileNotFoundError:
         return None
 
@@ -416,10 +421,10 @@ except FileNotFoundError:
     except Exception:
         present = ["(could not list directory)"]
     st.error(
-        "Could not find `insurance_model_bundle.pkl`.\n\n"
+        f"Could not find `{MODEL_PATH}`.\n\n"
         f"**Looking in:** `{cwd}`\n\n"
         f"**Files actually present there:** {present}\n\n"
-        "`insurance_model_bundle.pkl` must be in this exact folder, spelled exactly this way "
+        f"`{MODEL_PATH}` must be in this exact folder, spelled exactly this way "
         "(check for a `.pkl.pkl` or `(1).pkl` from a browser download, and check it isn't "
         "excluded by a `.gitignore` if deployed from GitHub)."
     )
