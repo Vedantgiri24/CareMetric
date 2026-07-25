@@ -13,6 +13,7 @@ import numpy as np
 import joblib
 import datetime
 import hashlib
+import os
 
 # ---------------------------------------------------------------
 # PAGE CONFIG (must be first Streamlit call)
@@ -409,7 +410,19 @@ try:
     model = bundle["model"]
     columns = bundle["columns"]
 except FileNotFoundError:
-    st.error("Could not find `insurance_model_bundle.pkl`. Make sure it's in the same folder as app.py.")
+    cwd = os.getcwd()
+    try:
+        present = os.listdir(cwd)
+    except Exception:
+        present = ["(could not list directory)"]
+    st.error(
+        "Could not find `insurance_model_bundle.pkl`.\n\n"
+        f"**Looking in:** `{cwd}`\n\n"
+        f"**Files actually present there:** {present}\n\n"
+        "`insurance_model_bundle.pkl` must be in this exact folder, spelled exactly this way "
+        "(check for a `.pkl.pkl` or `(1).pkl` from a browser download, and check it isn't "
+        "excluded by a `.gitignore` if deployed from GitHub)."
+    )
     st.stop()
 
 ref_df = load_reference_data()
