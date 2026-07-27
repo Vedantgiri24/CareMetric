@@ -16,9 +16,29 @@ import hashlib
 import os
 
 # Files created by the training script (train_model.py) / dataset export.
-# Keep both of these in the same directory as this app.py when deploying.
-MODEL_PATH = "insurance_model_bundle.pkl"
-DATA_PATH = "insurance.csv"
+# We search a few likely locations so deployment doesn't depend on exact
+# working-directory assumptions (e.g. files living inside an "Insurance/" subfolder).
+MODEL_FILENAME = "insurance_model_bundle.pkl"
+DATA_FILENAME = "insurance.csv"
+
+SEARCH_DIRS = [
+    ".",
+    "Insurance",
+    "insurance",
+    os.path.dirname(os.path.abspath(__file__)),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "Insurance"),
+]
+
+def find_file(filename):
+    """Look for `filename` in a few likely spots relative to the app."""
+    for d in SEARCH_DIRS:
+        candidate = os.path.join(d, filename)
+        if os.path.isfile(candidate):
+            return candidate
+    return None
+
+MODEL_PATH = find_file(MODEL_FILENAME)
+DATA_PATH = find_file(DATA_FILENAME)
 
 # ---------------------------------------------------------------
 # PAGE CONFIG (must be first Streamlit call)
@@ -391,39 +411,44 @@ st.markdown("""
 # LOAD MODEL BUNDLE
 # ---------------------------------------------------------------
 @st.cache_resource
-def load_bundle():
-    return joblib.load(MODEL_PATH)
+def load_bundle(path):
+    return joblib.load(path)
 
 @st.cache_data
-def load_reference_data():
+def load_reference_data(path):
+    if path is None:
+        return None
     try:
-        return pd.read_csv(DATA_PATH)
+        return pd.read_csv(path)
     except FileNotFoundError:
         return None
 
-try:
-    bundle = load_bundle()
-    scaler = bundle["scaler"]
-    poly = bundle["poly"]
-    model = bundle["model"]
-    columns = bundle["columns"]
-except FileNotFoundError:
+if MODEL_PATH is None:
     cwd = os.getcwd()
     try:
         present = os.listdir(cwd)
     except Exception:
         present = ["(could not list directory)"]
+    searched = ", ".join(f"`{d}`" for d in SEARCH_DIRS)
     st.error(
-        f"Could not find `{MODEL_PATH}`.\n\n"
-        f"**Looking in:** `{cwd}`\n\n"
-        f"**Files actually present there:** {present}\n\n"
-        f"`{MODEL_PATH}` must be in this exact folder, spelled exactly this way "
-        "(check for a `.pkl.pkl` or `(1).pkl` from a browser download, and check it isn't "
-        "excluded by a `.gitignore` if deployed from GitHub)."
+        f"Could not find `{MODEL_FILENAME}` in any of the expected locations.\n\n"
+        f"**Working directory:** `{cwd}`\n\n"
+        f"**Files present there:** {present}\n\n"
+        f"**Directories searched:** {searched}\n\n"
+        f"Make sure `{MODEL_FILENAME}` is committed to the repo (check it isn't listed in "
+        "`.gitignore`, and that it isn't over GitHub's file size limit — use Git LFS if so), "
+        "and that it's spelled exactly this way (watch for `.pkl.pkl` or `(1).pkl` from a "
+        "browser download)."
     )
     st.stop()
 
-ref_df = load_reference_data()
+bundle = load_bundle(MODEL_PATH)
+scaler = bundle["scaler"]
+poly = bundle["poly"]
+model = bundle["model"]
+columns = bundle["columns"]
+
+ref_df = load_reference_data(DATA_PATH)
 
 # ---------------------------------------------------------------
 # PREDICTION HELPERS
